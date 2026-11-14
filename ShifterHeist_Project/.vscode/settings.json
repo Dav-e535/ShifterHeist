@@ -67,5 +67,5 @@
         "*.sln": "*.csproj",
         "*.slnx": "*.csproj"
     },
-    "dotnet.defaultSolution": "ShifterHeist.slnx"
+    "dotnet.defaultSolution": "ShifterHeist_Project.slnx"
 }
