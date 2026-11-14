@@ -18,12 +18,18 @@ public class Human_Reaction : MonoBehaviour
     {
         if (suspectsShifter && !noticedShifter)
         {
-            Destroy(noticedIcon);
+            if (transform.childCount > 0)
+            {
+                Destroy(transform.GetChild(0).gameObject);
+            }
             Instantiate(suspiciousIcon,transform.position+new Vector3(0,0.2f,0),suspiciousIcon.transform.rotation,transform);
         }
         if (noticedShifter&&!stopchecking)
         {
-            Destroy(suspiciousIcon);
+            if (transform.childCount > 0)
+            {
+                Destroy(transform.GetChild(0).gameObject);
+            }
             Instantiate(noticedIcon, transform.position+new Vector3(0,0.2f,0), noticedIcon.transform.rotation, transform);
             stopchecking = true;
         }
@@ -37,6 +43,7 @@ public class Human_Reaction : MonoBehaviour
            suspectsShifter = true;
             if (playerController.shiftedTag == "Human")
             {
+                
                 StartCoroutine(NoticingHuman(3f,playerPos));
             }
             if (playerController.shiftedTag == "Object" && playerController.moveInput != new Vector2(0, 0))
