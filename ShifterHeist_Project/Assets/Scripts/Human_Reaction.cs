@@ -69,6 +69,11 @@ public class Human_Reaction : MonoBehaviour
         {
             noticedShifter = true;
         }
+        else
+        {
+            Destroy(transform.GetChild(0).gameObject);
+            suspectsShifter = false;
+        }
         
     }
     public IEnumerator NoticingObject(float seconds, Vector3 playerPos)
@@ -77,6 +82,11 @@ public class Human_Reaction : MonoBehaviour
         if(playerController.moveInput != new Vector2(0, 0)&&playerPos.x > gameObject.transform.position.x + leftbound && playerPos.x < gameObject.transform.position.x + rightbound && playerPos.y > gameObject.transform.position.y + bottombound && playerPos.y < gameObject.transform.position.y + topbound)
         {
             noticedShifter = true;
+        }
+        else
+        {
+            Destroy(transform.GetChild(0).gameObject);
+            suspectsShifter = false;
         }
     }
 }
