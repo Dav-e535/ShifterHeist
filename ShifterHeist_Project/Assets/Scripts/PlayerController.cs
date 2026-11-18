@@ -1,7 +1,10 @@
 using System.Collections;
 using Unity.VisualScripting;
+using UnityEditor.PackageManager.Requests;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.LowLevel;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
@@ -17,8 +20,8 @@ public class PlayerController : MonoBehaviour
     public float shiftNumber = 0;
     public bool alive = true;
     public bool turnsBack = true;
-    private Animator animator;
-    public InputAction attack;
+    public Animator animator;
+    public InputAction attack, restart;
     public float atkcooldown = 1f;
     private bool canEnterVent = false;
     public Vector3 secondVentPosition;
@@ -33,12 +36,17 @@ public class PlayerController : MonoBehaviour
             shapeshiftAction.Enable();
         }
         attack.Enable();
+        restart.Disable();
 
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (restart.triggered)
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        }
         animator.SetFloat("WalkDirX", moveInput.x);
         moveInput = moveAction.ReadValue<Vector2>();
         transform.Translate(moveInput * moveSpeed * Time.deltaTime);
@@ -81,11 +89,7 @@ public class PlayerController : MonoBehaviour
         }
         if (alive != true)
         {
-            moveAction.Disable();
-            foreach (InputAction shapeshiftAction in shapeshiftActions)
-            {
-                shapeshiftAction.Disable();
-            }
+            DeathSequence();
         }
 
     }
@@ -168,5 +172,15 @@ public class PlayerController : MonoBehaviour
         transform.localScale = new Vector3(1, 1, 1);
         ShapeShift(0);
         System.Array.Resize(ref shiftList, 1);
+    }
+    public void DeathSequence()
+    {
+        moveAction.Disable();
+        foreach (InputAction shapeshiftAction in shapeshiftActions)
+        {
+            shapeshiftAction.Disable();
+        }
+        attack.Disable();
+        restart.Enable();
     }
 }

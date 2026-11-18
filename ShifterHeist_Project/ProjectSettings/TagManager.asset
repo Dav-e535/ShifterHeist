@@ -8,6 +8,7 @@ TagManager:
   - Object
   - Shifter
   - Vent
+  - PlayerTrigger
   layers:
   - Default
   - TransparentFX

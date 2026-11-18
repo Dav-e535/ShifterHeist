@@ -9,14 +9,36 @@ public class Human_Reaction : MonoBehaviour
     public PlayerController playerController;
     public bool suspectsShifter = false, noticedShifter=false, stopchecking=false;
     public float topbound = 0.5f, bottombound = -0.5f, leftbound = -0.5f, rightbound = 0.5f, speed = 0.5f;
+    public bool alive=true;
     void Start()
     {
+        alive = true;
         player = GameObject.Find("Player");
         playerController = player.GetComponent<PlayerController>();
     }
     void Update()
     {
-        if (suspectsShifter && !noticedShifter)
+        Vector3 playerPos = player.transform.position;
+        if(playerPos.x > gameObject.transform.position.x + -0.5 && playerPos.x < gameObject.transform.position.x + 0.5 && playerPos.y > gameObject.transform.position.y + -0.5 && playerPos.y < gameObject.transform.position.y + 0.5)
+        {
+            if (playerController.attack.triggered)
+            {
+                alive = false;
+                transform.rotation = new Quaternion(0,0,90,0);
+            }
+        }
+        if (alive == false)
+        {
+            Destroy(transform.GetChild(0).gameObject);
+        }
+        if (!suspectsShifter && !noticedShifter)
+        {
+            if (transform.childCount > 0)
+            {
+                Destroy(transform.GetChild(0).gameObject);
+            }
+        }
+        if (suspectsShifter && !noticedShifter&&alive)
         {
             if (transform.childCount > 0)
             {
@@ -24,7 +46,7 @@ public class Human_Reaction : MonoBehaviour
             }
             Instantiate(suspiciousIcon,transform.position+new Vector3(0,0.2f,0),suspiciousIcon.transform.rotation,transform);
         }
-        if (noticedShifter&&!stopchecking)
+        if (noticedShifter&&!stopchecking&&alive)
         {
             if (transform.childCount > 0)
             {
@@ -33,12 +55,12 @@ public class Human_Reaction : MonoBehaviour
             Instantiate(noticedIcon, transform.position+new Vector3(0,0.2f,0), noticedIcon.transform.rotation, transform);
             stopchecking = true;
         }
-        if (noticedShifter)
+        if (noticedShifter&&alive)
         {
             transform.Translate((transform.position-player.transform.position).normalized*Time.deltaTime*speed);
         }
-        Vector3 playerPos = player.transform.position;
-        if (playerPos.x > gameObject.transform.position.x + leftbound && playerPos.x < gameObject.transform.position.x + rightbound && playerPos.y > gameObject.transform.position.y + bottombound && playerPos.y < gameObject.transform.position.y + topbound)
+        
+        if (alive&&playerPos.x > gameObject.transform.position.x + leftbound && playerPos.x < gameObject.transform.position.x + rightbound && playerPos.y > gameObject.transform.position.y + bottombound && playerPos.y < gameObject.transform.position.y + topbound)
         {
            suspectsShifter = true;
             if (playerController.shiftedTag == "Human")
@@ -55,7 +77,7 @@ public class Human_Reaction : MonoBehaviour
                 noticedShifter = true;
             }
         }
-        else
+        else if(alive)
         {
             suspectsShifter = false;
         }

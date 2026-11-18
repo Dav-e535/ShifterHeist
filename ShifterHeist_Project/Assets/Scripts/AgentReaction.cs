@@ -44,6 +44,10 @@ public class AgentReaction : MonoBehaviour
             
             
         }
+        if(player.GetComponent<PlayerController>().alive != true)
+        {
+            StopAllCoroutines();
+        }
         
         
         
@@ -55,7 +59,7 @@ public class AgentReaction : MonoBehaviour
             if (playerPos.x > gameObject.transform.position.x + leftbound && playerPos.x < gameObject.transform.position.x + rightbound && playerPos.y > gameObject.transform.position.y + bottombound && playerPos.y < gameObject.transform.position.y + topbound)
             {
                 agentAnimator.SetBool("noticed", true);
-                player.GetComponent<PlayerController>().alive = false;
+                
                 StartCoroutine(WhileNoticed(3f));
             }
             else
@@ -71,7 +75,7 @@ public IEnumerator TimeUntilNoticedObject(float seconds)
             if (playerPos.x > gameObject.transform.position.x + leftbound && playerPos.x < gameObject.transform.position.x + rightbound && playerPos.y > gameObject.transform.position.y + bottombound && playerPos.y < gameObject.transform.position.y + topbound&&playerController.moveInput!=new Vector2(0,0))
             {
                 agentAnimator.SetBool("noticed", true);
-                player.GetComponent<PlayerController>().alive = false;
+                
                 StartCoroutine(WhileNoticed(3f));
             }
             else
@@ -82,6 +86,8 @@ public IEnumerator TimeUntilNoticedObject(float seconds)
         }
         public IEnumerator WhileNoticed(float seconds)
         {
+            yield return new WaitForSeconds(0.05f);
+            player.GetComponent<PlayerController>().alive = false;
             yield return new WaitForSeconds(seconds);
             agentAnimator.SetBool("noticed", false);
         }

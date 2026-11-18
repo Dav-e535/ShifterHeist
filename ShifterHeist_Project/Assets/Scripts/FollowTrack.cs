@@ -24,11 +24,86 @@ public class FollowTrack : MonoBehaviour
         for(int i = 0; i != direction.Length; i++)
         {
         Vector3 initialPos = transform.position;
-        while (transform.position != initialPos + direction[i]&&humanReaction.noticedShifter==false)
-        {
-            yield return null;
-            transform.Translate(direction[i].normalized*speed*Time.deltaTime);
-        }
+            if (direction[i].y > 0)
+            {
+                if(direction[i].x > 0)
+                {
+                    while (transform.position.y < (initialPos + direction[i]).y&&transform.position.x < (initialPos + direction[i]).x&&humanReaction.noticedShifter==false)
+                    {   
+                        yield return null;
+                        transform.Translate(direction[i].normalized*speed*Time.deltaTime);
+                    }
+                }
+                else if(direction[i].x < 0)
+                {
+                    while (transform.position.y < (initialPos + direction[i]).y&&transform.position.x > (initialPos + direction[i]).x&&humanReaction.noticedShifter==false)
+                    {   
+                        yield return null;
+                        transform.Translate(direction[i].normalized*speed*Time.deltaTime);
+                    }
+                }
+                else
+                {
+                    while (transform.position.y < (initialPos + direction[i]).y&&humanReaction.noticedShifter==false)
+                    {   
+                        yield return null;
+                        transform.Translate(direction[i].normalized*speed*Time.deltaTime);
+                    }
+                }
+                
+            }
+            else if(direction[i].y < 0)
+            {
+                if(direction[i].x > 0)
+                {
+                    while (transform.position.y > (initialPos + direction[i]).y&&transform.position.x < (initialPos + direction[i]).x&&humanReaction.noticedShifter==false)
+                    {   
+                        yield return null;
+                        transform.Translate(direction[i].normalized*speed*Time.deltaTime);
+                    }
+                }
+                else if(direction[i].x < 0)
+                {
+                    while (transform.position.y > (initialPos + direction[i]).y&&transform.position.x > (initialPos + direction[i]).x&&humanReaction.noticedShifter==false)
+                    {   
+                        yield return null;
+                        transform.Translate(direction[i].normalized*speed*Time.deltaTime);
+                    }
+                }
+                else
+                {
+                    while (transform.position.y > (initialPos + direction[i]).y&&humanReaction.noticedShifter==false)
+                    {   
+                        yield return null;
+                        transform.Translate(direction[i].normalized*speed*Time.deltaTime);
+                    }
+                }
+            }
+            else
+            {
+                if(direction[i].x > 0)
+                {
+                    while (transform.position.x < (initialPos + direction[i]).x&&humanReaction.noticedShifter==false)
+                    {   
+                        yield return null;
+                        transform.Translate(direction[i].normalized*speed*Time.deltaTime);
+                    }
+                }
+                else if(direction[i].x < 0)
+                {
+                    while (transform.position.x > (initialPos + direction[i]).x&&humanReaction.noticedShifter==false)
+                    {   
+                        yield return null;
+                        transform.Translate(direction[i].normalized*speed*Time.deltaTime);
+                    }
+                }
+                else
+                {
+                    yield return null;
+                    
+                }
+            }
+        
         }
     }
 

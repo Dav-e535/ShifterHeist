@@ -16,7 +16,7 @@ public class ShiftOption : MonoBehaviour
     }
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.gameObject.CompareTag("Player"))
+        if (other.gameObject.CompareTag("PlayerTrigger"))
         {
             bool isAlreadyInList = false;
             foreach (GameObject shiftObject in playerController.shiftList)

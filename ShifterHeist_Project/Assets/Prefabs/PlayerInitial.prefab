@@ -121,7 +121,31 @@ MonoBehaviour:
   playerSprite: {fileID: 0}
   shiftList: []
   shapeshiftActions: []
-  shiftOptionUI: {fileID: 0}
+  shiftOptionUI: {fileID: 8578005773842972800, guid: e025dc1375b53924db0fce2dd75f56f6, type: 3}
   shiftedTag: Shifter
   shiftNumber: 0
   alive: 1
+  turnsBack: 1
+  animator: {fileID: 0}
+  attack:
+    m_Name: Attack
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: bf9a6ce2-0bf0-4114-90ef-edf025d019ff
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
+    m_Priority: 0
+  restart:
+    m_Name: Restart
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 2156dd4f-c558-4054-a265-d41ddafd433a
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
+    m_Priority: 0
+  atkcooldown: 1
+  secondVentPosition: {x: 0, y: 0, z: 0}
