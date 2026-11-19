@@ -8,8 +8,12 @@ public class AgentReaction : MonoBehaviour
     public float topbound = 0.5f, bottombound = -0.5f, leftbound = -0.5f, rightbound = 0.5f;
     private GameObject player;
     private PlayerController playerController;
+    public float shifterNoticeDelay, humanNoticeDelay, objectNoticeDelay;
     void Start()
     {
+        shifterNoticeDelay = GetComponent<Human_Reaction>().shifterNoticeDelay;
+        humanNoticeDelay = GetComponent<Human_Reaction>().humanNoticeDelay;
+        objectNoticeDelay = GetComponent<Human_Reaction>().objectNoticeDelay;
         agentAnimator = GetComponent<Animator>();
         player = GameObject.Find("Player");
         agentAnimator.SetBool("noticed", false);
@@ -22,7 +26,7 @@ public class AgentReaction : MonoBehaviour
         
         
         Vector3 playerPos = player.transform.position;
-        if (playerPos.x > gameObject.transform.position.x + leftbound && playerPos.x < gameObject.transform.position.x + rightbound && playerPos.y > gameObject.transform.position.y + bottombound && playerPos.y < gameObject.transform.position.y + topbound)
+        if (GetComponent<Human_Reaction>().cannoticeshifter&&playerPos.x > gameObject.transform.position.x + leftbound && playerPos.x < gameObject.transform.position.x + rightbound && playerPos.y > gameObject.transform.position.y + bottombound && playerPos.y < gameObject.transform.position.y + topbound)
         {
             noticedShifter = true;
         }
@@ -46,7 +50,9 @@ public class AgentReaction : MonoBehaviour
         }
         if(player.GetComponent<PlayerController>().alive != true)
         {
-            StopAllCoroutines();
+            StopCoroutine(TimeUntilNoticed(shifterNoticeDelay));
+            StopCoroutine(TimeUntilNoticed(humanNoticeDelay));
+            StopCoroutine(TimeUntilNoticedObject(objectNoticeDelay));
         }
         
         
@@ -91,4 +97,5 @@ public IEnumerator TimeUntilNoticedObject(float seconds)
             yield return new WaitForSeconds(seconds);
             agentAnimator.SetBool("noticed", false);
         }
+    
 }

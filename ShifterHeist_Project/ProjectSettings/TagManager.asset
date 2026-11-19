@@ -9,6 +9,7 @@ TagManager:
   - Shifter
   - Vent
   - PlayerTrigger
+  - SelectionUI
   layers:
   - Default
   - TransparentFX
