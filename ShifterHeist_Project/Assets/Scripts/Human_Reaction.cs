@@ -7,14 +7,17 @@ public class Human_Reaction : MonoBehaviour
     public GameObject noticedIcon;
     public GameObject player;
     public PlayerController playerController;
-    public bool suspectsShifter = false, noticedShifter=false, stopchecking=false;
+    public bool suspectsShifter = false, noticedShifter=false, stopchecking=false, cannoticeshifter = false;
     public float topbound = 0.5f, bottombound = -0.5f, leftbound = -0.5f, rightbound = 0.5f, speed = 0.5f;
     public bool alive=true;
+    public float startNoticeDelay, shifterNoticeDelay, humanNoticeDelay, objectNoticeDelay;
     void Start()
     {
+        cannoticeshifter = false;
         alive = true;
         player = GameObject.Find("Player");
         playerController = player.GetComponent<PlayerController>();
+        StartCoroutine(canNoticeWait());
     }
     void Update()
     {
@@ -29,20 +32,45 @@ public class Human_Reaction : MonoBehaviour
         }
         if (alive == false)
         {
-            Destroy(transform.GetChild(0).gameObject);
+            if (transform.childCount > 0)
+            {
+                if (transform.GetChild(0).gameObject.CompareTag("SelectionUI")&&transform.childCount > 1)
+            {
+                Destroy(transform.GetChild(1).gameObject);
+            }
+            else if(transform.GetChild(0).gameObject.CompareTag("SelectionUI")==false)
+            {
+                Destroy(transform.GetChild(0).gameObject);
+            }
+            }
+            
         }
         if (!suspectsShifter && !noticedShifter)
         {
             if (transform.childCount > 0)
             {
+                if (transform.GetChild(0).gameObject.CompareTag("SelectionUI")&&transform.childCount > 1)
+            {
+                Destroy(transform.GetChild(1).gameObject);
+            }
+            else if(transform.GetChild(0).gameObject.CompareTag("SelectionUI")==false)
+            {
                 Destroy(transform.GetChild(0).gameObject);
+            }
             }
         }
         if (suspectsShifter && !noticedShifter&&alive)
         {
             if (transform.childCount > 0)
             {
+                if (transform.GetChild(0).gameObject.CompareTag("SelectionUI")&&transform.childCount > 1)
+            {
+                Destroy(transform.GetChild(1).gameObject);
+            }
+            else if(transform.GetChild(0).gameObject.CompareTag("SelectionUI")==false)
+            {
                 Destroy(transform.GetChild(0).gameObject);
+            }
             }
             Instantiate(suspiciousIcon,transform.position+new Vector3(0,0.2f,0),suspiciousIcon.transform.rotation,transform);
         }
@@ -50,7 +78,14 @@ public class Human_Reaction : MonoBehaviour
         {
             if (transform.childCount > 0)
             {
+                if (transform.GetChild(0).gameObject.CompareTag("SelectionUI")&&transform.childCount > 1)
+            {
+                Destroy(transform.GetChild(1).gameObject);
+            }
+            else if(transform.GetChild(0).gameObject.CompareTag("SelectionUI")==false)
+            {
                 Destroy(transform.GetChild(0).gameObject);
+            }
             }
             Instantiate(noticedIcon, transform.position+new Vector3(0,0.2f,0), noticedIcon.transform.rotation, transform);
             stopchecking = true;
@@ -66,11 +101,11 @@ public class Human_Reaction : MonoBehaviour
             if (playerController.shiftedTag == "Human")
             {
                 
-                StartCoroutine(NoticingHuman(3f,playerPos));
+                StartCoroutine(NoticingHuman(humanNoticeDelay,playerPos));
             }
             if (playerController.shiftedTag == "Object" && playerController.moveInput != new Vector2(0, 0))
             {
-                StartCoroutine(NoticingObject(0.2f, playerPos));
+                StartCoroutine(NoticingObject(objectNoticeDelay, playerPos));
             }
             if (playerController.shiftedTag == "Shifter")
             {
@@ -93,7 +128,17 @@ public class Human_Reaction : MonoBehaviour
         }
         else
         {
-            Destroy(transform.GetChild(0).gameObject);
+            if (transform.childCount > 0)
+            {
+                if (transform.GetChild(0).gameObject.CompareTag("SelectionUI")&&transform.childCount > 1)
+            {
+                Destroy(transform.GetChild(1).gameObject);
+            }
+            else if(transform.GetChild(0).gameObject.CompareTag("SelectionUI")==false)
+            {
+                Destroy(transform.GetChild(0).gameObject);
+            }
+            }
             suspectsShifter = false;
         }
         
@@ -110,5 +155,10 @@ public class Human_Reaction : MonoBehaviour
             Destroy(transform.GetChild(0).gameObject);
             suspectsShifter = false;
         }
+    }
+    IEnumerator canNoticeWait()
+    {
+        yield return new WaitForSeconds(startNoticeDelay);
+        cannoticeshifter = true;
     }
 }

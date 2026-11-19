@@ -137,6 +137,9 @@ MonoBehaviour:
   bottombound: -1
   leftbound: -1
   rightbound: 1
+  shifterNoticeDelay: 0.01
+  humanNoticeDelay: 3
+  objectNoticeDelay: 0.2
 --- !u!61 &2277314365371468412
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -202,12 +205,17 @@ MonoBehaviour:
   suspectsShifter: 0
   noticedShifter: 0
   stopchecking: 0
+  cannoticeshifter: 0
   topbound: 1
   bottombound: -1
   leftbound: -1
   rightbound: 1
   speed: 0
   alive: 0
+  startNoticeDelay: 2
+  shifterNoticeDelay: 0.01
+  humanNoticeDelay: 3
+  objectNoticeDelay: 0.2
 --- !u!114 &1454262408204694695
 MonoBehaviour:
   m_ObjectHideFlags: 0
