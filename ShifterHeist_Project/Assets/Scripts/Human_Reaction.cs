@@ -152,7 +152,17 @@ public class Human_Reaction : MonoBehaviour
         }
         else
         {
-            Destroy(transform.GetChild(0).gameObject);
+            if (transform.childCount > 0)
+            {
+                if (transform.GetChild(0).gameObject.CompareTag("SelectionUI")&&transform.childCount > 1)
+            {
+                Destroy(transform.GetChild(1).gameObject);
+            }
+            else if(transform.GetChild(0).gameObject.CompareTag("SelectionUI")==false)
+            {
+                Destroy(transform.GetChild(0).gameObject);
+            }
+            }
             suspectsShifter = false;
         }
     }

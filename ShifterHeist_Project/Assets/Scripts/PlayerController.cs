@@ -18,10 +18,10 @@ public class PlayerController : MonoBehaviour
     public GameObject shiftOptionUI;
     public string shiftedTag = "Shifter";
     public float shiftNumber = 0;
-    public bool alive = true;
+    public bool alive = true, canUse = false;
     public bool turnsBack = true;
     public Animator animator;
-    public InputAction attack, restart;
+    public InputAction attack, restart, use;
     public float atkcooldown = 1f;
     private bool canEnterVent = false;
     public Vector3 secondVentPosition;
@@ -37,6 +37,7 @@ public class PlayerController : MonoBehaviour
         }
         attack.Enable();
         restart.Disable();
+        use.Enable();
 
     }
 
@@ -91,9 +92,13 @@ public class PlayerController : MonoBehaviour
         {
             DeathSequence();
         }
+        if (canUse && use.triggered&&usableObject!=null)
+        {
+            usableObject.GetComponent<Usable>().UseTriggered();
+        }
 
     }
-
+    public GameObject usableObject;
     public void ShiftOptionUI(GameObject shiftOption)
     {
         Instantiate(shiftOptionUI, shiftOption.transform.position, shiftOptionUI.transform.rotation,shiftOption.transform);
@@ -118,7 +123,7 @@ public class PlayerController : MonoBehaviour
         if(index != 0)
         {
             animator.enabled = false;
-            StartCoroutine(MaxShiftTime(60f));
+            StartCoroutine(MaxShiftTime(30f));
         }
         else
         {
@@ -135,6 +140,15 @@ public class PlayerController : MonoBehaviour
         {
             canEnterVent = true;
         }
+        if (collision.CompareTag("Item"))
+        {
+            canUse = true;
+            usableObject = collision.gameObject;
+        }
+        if (collision.CompareTag("Door"))
+        {
+            collision.GetComponent<DoorScript>().OpenDoor();
+        }
 
     }
 
@@ -143,7 +157,14 @@ public class PlayerController : MonoBehaviour
         if (collision.CompareTag("Vent"))
         {
             canEnterVent = false;
+            
         }
+        if (collision.CompareTag("Item"))
+        {
+            canUse = false;
+            usableObject = null;
+        }
+
     }
     public void VentEnter(GameObject vent)
     {
@@ -161,6 +182,7 @@ public class PlayerController : MonoBehaviour
     }
     public IEnumerator VentAnimation2(float seconds, Vector3 ventPosition)
     {
+        moveAction.Disable();
         yield return new WaitForSeconds(seconds);
         while(transform.position != ventPosition+new Vector3(0, -0.1f, 0))
         {
@@ -172,6 +194,7 @@ public class PlayerController : MonoBehaviour
         transform.localScale = new Vector3(1, 1, 1);
         ShapeShift(0);
         System.Array.Resize(ref shiftList, 1);
+        moveAction.Enable();
     }
     public void DeathSequence()
     {

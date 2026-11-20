@@ -10,6 +10,9 @@ TagManager:
   - Vent
   - PlayerTrigger
   - SelectionUI
+  - EventsTrigger
+  - Item
+  - Door
   layers:
   - Default
   - TransparentFX

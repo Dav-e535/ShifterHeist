@@ -4,7 +4,7 @@ using UnityEngine;
 public class AgentReaction : MonoBehaviour
 {
     public Animator agentAnimator;
-    public bool noticedShifter = false;
+    public bool noticedShifter = false, objectNoticePending = false;
     public float topbound = 0.5f, bottombound = -0.5f, leftbound = -0.5f, rightbound = 0.5f;
     private GameObject player;
     private PlayerController playerController;
@@ -18,6 +18,7 @@ public class AgentReaction : MonoBehaviour
         player = GameObject.Find("Player");
         agentAnimator.SetBool("noticed", false);
         playerController = player.GetComponent<PlayerController>();
+        objectNoticePending = false;
     }
 
     // Update is called once per frame
@@ -36,15 +37,16 @@ public class AgentReaction : MonoBehaviour
         }
         if (noticedShifter && player.GetComponent<PlayerController>().alive && agentAnimator.GetBool("noticed") == false && playerController.shiftedTag == "Shifter")
         {
-            StartCoroutine(TimeUntilNoticed(0.01f));
+            StartCoroutine(TimeUntilNoticed(shifterNoticeDelay));
         }
-        if (noticedShifter && player.GetComponent<PlayerController>().alive && agentAnimator.GetBool("noticed") == false && playerController.shiftedTag == "Object"&&playerController.moveInput!=new Vector2(0,0))
+        if (!objectNoticePending &&noticedShifter && player.GetComponent<PlayerController>().alive && agentAnimator.GetBool("noticed") == false && playerController.shiftedTag == "Object"&&playerController.moveInput!=new Vector2(0,0))
         {
-            StartCoroutine(TimeUntilNoticedObject(0.2f));
+            objectNoticePending = true;
+            StartCoroutine(TimeUntilNoticedObject(objectNoticeDelay));
         }
         if(noticedShifter&&player.GetComponent<PlayerController>().alive&&agentAnimator.GetBool("noticed")==false&&playerController.shiftedTag=="Human")
         {
-            StartCoroutine(TimeUntilNoticed(3f));
+            StartCoroutine(TimeUntilNoticed(humanNoticeDelay));
             
             
         }
@@ -96,6 +98,10 @@ public IEnumerator TimeUntilNoticedObject(float seconds)
             player.GetComponent<PlayerController>().alive = false;
             yield return new WaitForSeconds(seconds);
             agentAnimator.SetBool("noticed", false);
+            if(playerController.shiftedTag == "Object")
+        {
+            objectNoticePending = false;
+        }
         }
     
 }
