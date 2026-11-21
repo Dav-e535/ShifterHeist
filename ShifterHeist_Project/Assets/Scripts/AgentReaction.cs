@@ -4,7 +4,7 @@ using UnityEngine;
 public class AgentReaction : MonoBehaviour
 {
     public Animator agentAnimator;
-    public bool noticedShifter = false, objectNoticePending = false;
+    public bool noticedShifter = false, objectNoticePending = false, agentAlive;
     public float topbound = 0.5f, bottombound = -0.5f, leftbound = -0.5f, rightbound = 0.5f;
     private GameObject player;
     private PlayerController playerController;
@@ -14,6 +14,7 @@ public class AgentReaction : MonoBehaviour
         shifterNoticeDelay = GetComponent<Human_Reaction>().shifterNoticeDelay;
         humanNoticeDelay = GetComponent<Human_Reaction>().humanNoticeDelay;
         objectNoticeDelay = GetComponent<Human_Reaction>().objectNoticeDelay;
+        agentAlive = GetComponent<Human_Reaction>().alive;
         agentAnimator = GetComponent<Animator>();
         player = GameObject.Find("Player");
         agentAnimator.SetBool("noticed", false);
@@ -24,8 +25,9 @@ public class AgentReaction : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
-        
+
+        //if (agentAlive)
+        //{
         Vector3 playerPos = player.transform.position;
         if (GetComponent<Human_Reaction>().cannoticeshifter&&playerPos.x > gameObject.transform.position.x + leftbound && playerPos.x < gameObject.transform.position.x + rightbound && playerPos.y > gameObject.transform.position.y + bottombound && playerPos.y < gameObject.transform.position.y + topbound)
         {
@@ -57,7 +59,7 @@ public class AgentReaction : MonoBehaviour
             StopCoroutine(TimeUntilNoticedObject(objectNoticeDelay));
         }
         
-        
+        //}
         
     }
     public IEnumerator TimeUntilNoticed(float seconds)

@@ -27,7 +27,7 @@ public class Human_Reaction : MonoBehaviour
             if (playerController.attack.triggered)
             {
                 alive = false;
-                transform.rotation = new Quaternion(0,0,90,0);
+                transform.rotation = new Quaternion(0,0,90,90);
             }
         }
         if (alive == false)

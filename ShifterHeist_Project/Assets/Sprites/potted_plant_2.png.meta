@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 1cb2360ac1847014399afe9c206f1e3a
+guid: 0b79876258125064ab5645b84826834f
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 8112552286072458916
-    second: pottet_plant_2_0
+      213: -7214287473768800840
+    second: potted_plant_2_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -37,7 +37,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -77,7 +77,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -115,7 +115,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: pottet_plant_2_0
+      name: potted_plant_2_0
       rect:
         serializedVersion: 2
         x: 2
@@ -130,8 +130,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 4aec1217253959070800000000000000
-      internalID: 8112552286072458916
+      spriteID: 8bdd57af3c3b1eb90800000000000000
+      internalID: -7214287473768800840
       vertices: []
       indices: 
       edges: []
@@ -150,7 +150,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      pottet_plant_2_0: 8112552286072458916
+      potted_plant_2_0: -7214287473768800840
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

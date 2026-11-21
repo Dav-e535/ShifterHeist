@@ -28,7 +28,7 @@ public class FollowTrack : MonoBehaviour
             {
                 if(direction[i].x > 0)
                 {
-                    while (transform.position.y < (initialPos + direction[i]).y&&transform.position.x < (initialPos + direction[i]).x&&humanReaction.noticedShifter==false)
+                    while (transform.position.y < (initialPos + direction[i]).y&&transform.position.x < (initialPos + direction[i]).x&&humanReaction.noticedShifter==false||GetComponent<Human_Reaction>().cannoticeshifter)
                     {   
                         yield return null;
                         transform.Translate(direction[i].normalized*speed*Time.deltaTime);
@@ -36,7 +36,7 @@ public class FollowTrack : MonoBehaviour
                 }
                 else if(direction[i].x < 0)
                 {
-                    while (transform.position.y < (initialPos + direction[i]).y&&transform.position.x > (initialPos + direction[i]).x&&humanReaction.noticedShifter==false)
+                    while (transform.position.y < (initialPos + direction[i]).y&&transform.position.x > (initialPos + direction[i]).x&&humanReaction.noticedShifter==false||!GetComponent<Human_Reaction>().cannoticeshifter)
                     {   
                         yield return null;
                         transform.Translate(direction[i].normalized*speed*Time.deltaTime);
@@ -44,7 +44,7 @@ public class FollowTrack : MonoBehaviour
                 }
                 else
                 {
-                    while (transform.position.y < (initialPos + direction[i]).y&&humanReaction.noticedShifter==false)
+                    while (transform.position.y < (initialPos + direction[i]).y&&humanReaction.noticedShifter==false||!GetComponent<Human_Reaction>().cannoticeshifter)
                     {   
                         yield return null;
                         transform.Translate(direction[i].normalized*speed*Time.deltaTime);
@@ -56,7 +56,7 @@ public class FollowTrack : MonoBehaviour
             {
                 if(direction[i].x > 0)
                 {
-                    while (transform.position.y > (initialPos + direction[i]).y&&transform.position.x < (initialPos + direction[i]).x&&humanReaction.noticedShifter==false)
+                    while (transform.position.y > (initialPos + direction[i]).y&&transform.position.x < (initialPos + direction[i]).x&&humanReaction.noticedShifter==false||!GetComponent<Human_Reaction>().cannoticeshifter)
                     {   
                         yield return null;
                         transform.Translate(direction[i].normalized*speed*Time.deltaTime);
@@ -64,7 +64,7 @@ public class FollowTrack : MonoBehaviour
                 }
                 else if(direction[i].x < 0)
                 {
-                    while (transform.position.y > (initialPos + direction[i]).y&&transform.position.x > (initialPos + direction[i]).x&&humanReaction.noticedShifter==false)
+                    while (transform.position.y > (initialPos + direction[i]).y&&transform.position.x > (initialPos + direction[i]).x&&humanReaction.noticedShifter==false||!GetComponent<Human_Reaction>().cannoticeshifter)
                     {   
                         yield return null;
                         transform.Translate(direction[i].normalized*speed*Time.deltaTime);
@@ -72,7 +72,7 @@ public class FollowTrack : MonoBehaviour
                 }
                 else
                 {
-                    while (transform.position.y > (initialPos + direction[i]).y&&humanReaction.noticedShifter==false)
+                    while (transform.position.y > (initialPos + direction[i]).y&&humanReaction.noticedShifter==false||!GetComponent<Human_Reaction>().cannoticeshifter)
                     {   
                         yield return null;
                         transform.Translate(direction[i].normalized*speed*Time.deltaTime);
@@ -83,7 +83,7 @@ public class FollowTrack : MonoBehaviour
             {
                 if(direction[i].x > 0)
                 {
-                    while (transform.position.x < (initialPos + direction[i]).x&&humanReaction.noticedShifter==false)
+                    while (transform.position.x < (initialPos + direction[i]).x&&humanReaction.noticedShifter==false||!GetComponent<Human_Reaction>().cannoticeshifter)
                     {   
                         yield return null;
                         transform.Translate(direction[i].normalized*speed*Time.deltaTime);
@@ -91,7 +91,7 @@ public class FollowTrack : MonoBehaviour
                 }
                 else if(direction[i].x < 0)
                 {
-                    while (transform.position.x > (initialPos + direction[i]).x&&humanReaction.noticedShifter==false)
+                    while (transform.position.x > (initialPos + direction[i]).x&&humanReaction.noticedShifter==false||!GetComponent<Human_Reaction>().cannoticeshifter)
                     {   
                         yield return null;
                         transform.Translate(direction[i].normalized*speed*Time.deltaTime);

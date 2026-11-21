@@ -133,12 +133,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AgentReaction
   agentAnimator: {fileID: 0}
   noticedShifter: 0
+  objectNoticePending: 0
+  agentAlive: 0
   topbound: 1
   bottombound: -1
   leftbound: -1
   rightbound: 1
   shifterNoticeDelay: 0.01
-  humanNoticeDelay: 3
+  humanNoticeDelay: 1.5
   objectNoticeDelay: 0.2
 --- !u!61 &7947452892676292685
 BoxCollider2D:
@@ -214,8 +216,8 @@ MonoBehaviour:
   alive: 0
   startNoticeDelay: 2
   shifterNoticeDelay: 0.01
-  humanNoticeDelay: 3
-  objectNoticeDelay: 0.2
+  humanNoticeDelay: 5
+  objectNoticeDelay: 0.5
 --- !u!114 &4247633568114594370
 MonoBehaviour:
   m_ObjectHideFlags: 0

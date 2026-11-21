@@ -13,6 +13,7 @@ TagManager:
   - EventsTrigger
   - Item
   - Door
+  - DarkSpot
   layers:
   - Default
   - TransparentFX

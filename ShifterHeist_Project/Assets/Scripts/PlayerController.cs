@@ -1,4 +1,4 @@
-using System.Collections;
+ using System.Collections;
 using Unity.VisualScripting;
 using UnityEditor.PackageManager.Requests;
 using UnityEngine;
@@ -8,6 +8,7 @@ using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
+
     public InputAction moveAction;
     public float moveSpeed = 5f;
     public Vector2 moveInput;
@@ -19,12 +20,13 @@ public class PlayerController : MonoBehaviour
     public string shiftedTag = "Shifter";
     public float shiftNumber = 0;
     public bool alive = true, canUse = false;
-    public bool turnsBack = true;
+    public bool canTurnBack = true;
     public Animator animator;
     public InputAction attack, restart, use;
-    public float atkcooldown = 1f;
+    public float atkcooldown = 1f, ShiftCoolDown;
     private bool canEnterVent = false;
     public Vector3 secondVentPosition;
+    private bool isVenting= false;
     void Start()
     {
         moveAction.Enable();
@@ -61,7 +63,7 @@ public class PlayerController : MonoBehaviour
         }
         if (attack.triggered)
         {
-            ShapeShift(0);
+            
             moveAction.Disable();
             animator.SetTrigger("attack");
             StartCoroutine(Attackperiod(0.9f));
@@ -76,13 +78,9 @@ public class PlayerController : MonoBehaviour
                 
             }
         }
-        if (shiftNumber != 0)
-        {
-            MaxShiftTime(60f);
-        }
         foreach (InputAction shapeshiftAction in shapeshiftActions)
         {
-            if (shapeshiftAction.triggered)
+            if (shapeshiftAction.triggered&&canTurnBack)
             {
                 int index = System.Array.IndexOf(shapeshiftActions, shapeshiftAction);
                 ShapeShift(index);
@@ -107,11 +105,24 @@ public class PlayerController : MonoBehaviour
     {
         yield return new WaitForSeconds(seconds);
         ShapeShift(0);
+        canTurnBack = false;
+        StartCoroutine(ShiftCooldown(15f));
+    }
+    public IEnumerator ShiftCooldown(float seconds)
+    {
+        yield return new WaitForSeconds(seconds);
+        canTurnBack = true;
     }
     public IEnumerator Attackperiod(float seconds)
     {
-        yield return new WaitForSeconds(seconds);
-        moveAction.Enable();
+        yield return new WaitForSeconds(0.01f);
+        ShapeShift(0);
+        yield return new WaitForSeconds(seconds-0.01f);
+        if (!isVenting)
+        {
+            moveAction.Enable();
+        }
+        
     }
     public IEnumerator Attackcooldown(float seconds)
     {
@@ -128,7 +139,7 @@ public class PlayerController : MonoBehaviour
         else
         {
             animator.enabled = true;
-            StopCoroutine(MaxShiftTime(60f));
+            StopCoroutine(MaxShiftTime(30f));
         }
         playerSprite.sprite = shiftList[index].GetComponent<SpriteRenderer>().sprite;
         shiftedTag = shiftList[index].tag;
@@ -149,6 +160,10 @@ public class PlayerController : MonoBehaviour
         {
             collision.GetComponent<DoorScript>().OpenDoor();
         }
+        if (collision.CompareTag("DarkSpot"))
+        {
+            StartCoroutine(collision.GetComponent<DarkSpot>().FadeOut());
+        }
 
     }
 
@@ -164,6 +179,10 @@ public class PlayerController : MonoBehaviour
             canUse = false;
             usableObject = null;
         }
+        if (collision.CompareTag("DarkSpot"))
+        {
+            StartCoroutine(collision.GetComponent<DarkSpot>().FadeIn());
+        }
 
     }
     public void VentEnter(GameObject vent)
@@ -176,6 +195,7 @@ public class PlayerController : MonoBehaviour
     }
     public IEnumerator VentAnimation(float seconds, Vector3 ventPosition)
     {
+        isVenting = true;
         yield return new WaitForSeconds(seconds);
         animator.SetTrigger("attack");
         StartCoroutine(VentAnimation2(0.5f, ventPosition));
@@ -184,17 +204,20 @@ public class PlayerController : MonoBehaviour
     {
         moveAction.Disable();
         yield return new WaitForSeconds(seconds);
+        float moveS = moveSpeed;
         while(transform.position != ventPosition+new Vector3(0, -0.1f, 0))
         {
             yield return new WaitForSeconds(0.01f);
-            transform.position = Vector3.MoveTowards(transform.position, ventPosition+new Vector3(0, -0.1f, 0), moveSpeed * Time.deltaTime);
+            transform.position = Vector3.MoveTowards(transform.position, ventPosition+new Vector3(0, -0.1f, 0), moveS * Time.deltaTime);
             transform.localScale = transform.localScale - new Vector3(0.01f, 0.01f, 0);
+            moveS*=1.1f;
         }
         transform.position = secondVentPosition;
         transform.localScale = new Vector3(1, 1, 1);
         ShapeShift(0);
         System.Array.Resize(ref shiftList, 1);
         moveAction.Enable();
+        isVenting = false;
     }
     public void DeathSequence()
     {
