@@ -134,6 +134,7 @@ public class PlayerController : MonoBehaviour
         if(index != 0)
         {
             animator.enabled = false;
+            StopCoroutine(MaxShiftTime(30f));
             StartCoroutine(MaxShiftTime(30f));
         }
         else
@@ -158,7 +159,7 @@ public class PlayerController : MonoBehaviour
         }
         if (collision.CompareTag("Door"))
         {
-            collision.GetComponent<DoorScript>().OpenDoor();
+            //collision.GetComponent<DoorScript>().OpenDoor();
         }
         if (collision.CompareTag("DarkSpot"))
         {

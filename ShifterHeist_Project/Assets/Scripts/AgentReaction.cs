@@ -43,7 +43,7 @@ public class AgentReaction : MonoBehaviour
         }
         if (!objectNoticePending &&noticedShifter && player.GetComponent<PlayerController>().alive && agentAnimator.GetBool("noticed") == false && playerController.shiftedTag == "Object"&&playerController.moveInput!=new Vector2(0,0))
         {
-            objectNoticePending = true;
+            
             StartCoroutine(TimeUntilNoticedObject(objectNoticeDelay));
         }
         if(noticedShifter&&player.GetComponent<PlayerController>().alive&&agentAnimator.GetBool("noticed")==false&&playerController.shiftedTag=="Human")
@@ -80,6 +80,7 @@ public class AgentReaction : MonoBehaviour
         }
 public IEnumerator TimeUntilNoticedObject(float seconds)
         {
+            objectNoticePending = true;
             yield return new WaitForSeconds(seconds);
             Vector3 playerPos = player.transform.position;
             if (playerPos.x > gameObject.transform.position.x + leftbound && playerPos.x < gameObject.transform.position.x + rightbound && playerPos.y > gameObject.transform.position.y + bottombound && playerPos.y < gameObject.transform.position.y + topbound&&playerController.moveInput!=new Vector2(0,0))
@@ -91,6 +92,7 @@ public IEnumerator TimeUntilNoticedObject(float seconds)
             else
             {
                 agentAnimator.SetBool("noticed", false);
+                objectNoticePending = false;
             }
             
         }
