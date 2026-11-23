@@ -11,6 +11,10 @@ public class AgentReaction : MonoBehaviour
     public float shifterNoticeDelay, humanNoticeDelay, objectNoticeDelay;
     void Start()
     {
+        topbound = GetComponent<Human_Reaction>().topbound;
+        leftbound = GetComponent<Human_Reaction>().leftbound;
+        bottombound = GetComponent<Human_Reaction>().bottombound;
+        rightbound = GetComponent<Human_Reaction>().rightbound;
         shifterNoticeDelay = GetComponent<Human_Reaction>().shifterNoticeDelay;
         humanNoticeDelay = GetComponent<Human_Reaction>().humanNoticeDelay;
         objectNoticeDelay = GetComponent<Human_Reaction>().objectNoticeDelay;
@@ -29,7 +33,7 @@ public class AgentReaction : MonoBehaviour
         //if (agentAlive)
         //{
         Vector3 playerPos = player.transform.position;
-        if (GetComponent<Human_Reaction>().cannoticeshifter&&playerPos.x > gameObject.transform.position.x + leftbound && playerPos.x < gameObject.transform.position.x + rightbound && playerPos.y > gameObject.transform.position.y + bottombound && playerPos.y < gameObject.transform.position.y + topbound)
+        if (!player.GetComponent<PlayerController>().safe&&GetComponent<Human_Reaction>().cannoticeshifter&&playerPos.x > gameObject.transform.position.x + leftbound && playerPos.x < gameObject.transform.position.x + rightbound && playerPos.y > gameObject.transform.position.y + bottombound && playerPos.y < gameObject.transform.position.y + topbound)
         {
             noticedShifter = true;
         }
@@ -37,16 +41,16 @@ public class AgentReaction : MonoBehaviour
         {
             noticedShifter = false;
         }
-        if (noticedShifter && player.GetComponent<PlayerController>().alive && agentAnimator.GetBool("noticed") == false && playerController.shiftedTag == "Shifter")
+        if (!player.GetComponent<PlayerController>().safe&&noticedShifter && player.GetComponent<PlayerController>().alive && agentAnimator.GetBool("noticed") == false && playerController.shiftedTag == "Shifter")
         {
             StartCoroutine(TimeUntilNoticed(shifterNoticeDelay));
         }
-        if (!objectNoticePending &&noticedShifter && player.GetComponent<PlayerController>().alive && agentAnimator.GetBool("noticed") == false && playerController.shiftedTag == "Object"&&playerController.moveInput!=new Vector2(0,0))
+        if (!player.GetComponent<PlayerController>().safe&&!objectNoticePending &&noticedShifter && player.GetComponent<PlayerController>().alive && agentAnimator.GetBool("noticed") == false && playerController.shiftedTag == "Object"&&playerController.moveInput!=new Vector2(0,0))
         {
             
             StartCoroutine(TimeUntilNoticedObject(objectNoticeDelay));
         }
-        if(noticedShifter&&player.GetComponent<PlayerController>().alive&&agentAnimator.GetBool("noticed")==false&&playerController.shiftedTag=="Human")
+        if(!player.GetComponent<PlayerController>().safe&&noticedShifter&&player.GetComponent<PlayerController>().alive&&agentAnimator.GetBool("noticed")==false&&playerController.shiftedTag=="Human")
         {
             StartCoroutine(TimeUntilNoticed(humanNoticeDelay));
             
@@ -58,6 +62,7 @@ public class AgentReaction : MonoBehaviour
             StopCoroutine(TimeUntilNoticed(humanNoticeDelay));
             StopCoroutine(TimeUntilNoticedObject(objectNoticeDelay));
         }
+        
         
         //}
         

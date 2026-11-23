@@ -19,7 +19,7 @@ public class PlayerController : MonoBehaviour
     public GameObject shiftOptionUI;
     public string shiftedTag = "Shifter";
     public float shiftNumber = 0;
-    public bool alive = true, canUse = false;
+    public bool alive = true, canUse = false, safe;
     public bool canTurnBack = true;
     public Animator animator;
     public InputAction attack, restart, use;
@@ -27,6 +27,8 @@ public class PlayerController : MonoBehaviour
     private bool canEnterVent = false;
     public Vector3 secondVentPosition;
     private bool isVenting= false;
+    public Coroutine maxShiftCoroutine;
+    public Coroutine shiftCooldownCoroutine;
     void Start()
     {
         moveAction.Enable();
@@ -104,13 +106,15 @@ public class PlayerController : MonoBehaviour
     public IEnumerator MaxShiftTime(float seconds)
     {
         yield return new WaitForSeconds(seconds);
+        maxShiftCoroutine = null;
         ShapeShift(0);
         canTurnBack = false;
-        StartCoroutine(ShiftCooldown(15f));
+        shiftCooldownCoroutine = StartCoroutine(ShiftCooldown(15f));
     }
     public IEnumerator ShiftCooldown(float seconds)
     {
         yield return new WaitForSeconds(seconds);
+        shiftCooldownCoroutine = null;
         canTurnBack = true;
     }
     public IEnumerator Attackperiod(float seconds)
@@ -134,13 +138,20 @@ public class PlayerController : MonoBehaviour
         if(index != 0)
         {
             animator.enabled = false;
-            StopCoroutine(MaxShiftTime(30f));
-            StartCoroutine(MaxShiftTime(30f));
+            if (maxShiftCoroutine != null)
+            {
+                StopCoroutine(maxShiftCoroutine);
+            }
+            maxShiftCoroutine = StartCoroutine(MaxShiftTime(30f));
         }
         else
         {
             animator.enabled = true;
-            StopCoroutine(MaxShiftTime(30f));
+            if (maxShiftCoroutine != null)
+            {
+                StopCoroutine(maxShiftCoroutine);
+                maxShiftCoroutine = null;
+            }
         }
         playerSprite.sprite = shiftList[index].GetComponent<SpriteRenderer>().sprite;
         shiftedTag = shiftList[index].tag;
@@ -159,11 +170,16 @@ public class PlayerController : MonoBehaviour
         }
         if (collision.CompareTag("Door"))
         {
-            //collision.GetComponent<DoorScript>().OpenDoor();
+            collision.gameObject.GetComponent<DoorScript>().OpenDoor();
         }
         if (collision.CompareTag("DarkSpot"))
         {
             StartCoroutine(collision.GetComponent<DarkSpot>().FadeOut());
+            if (collision.GetComponent<DarkSpot>().safeSpot)
+            {
+                safe = true;
+            }
+            
         }
 
     }
@@ -183,6 +199,11 @@ public class PlayerController : MonoBehaviour
         if (collision.CompareTag("DarkSpot"))
         {
             StartCoroutine(collision.GetComponent<DarkSpot>().FadeIn());
+            safe = false;
+        }
+        if (collision.CompareTag("Door"))
+        {
+            collision.gameObject.GetComponent<DoorScript>().CloseDoor();
         }
 
     }

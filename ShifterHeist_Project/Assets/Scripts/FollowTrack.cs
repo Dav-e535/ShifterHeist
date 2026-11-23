@@ -6,6 +6,8 @@ public class FollowTrack : MonoBehaviour
     public Vector3[] direction;
     private Human_Reaction humanReaction;
     public float speed;
+    public bool repeats = false, waitsEveryTurn = false;
+    public float repeatWait;
     void Start()
     {
         humanReaction = gameObject.GetComponent<Human_Reaction>();
@@ -21,10 +23,21 @@ public class FollowTrack : MonoBehaviour
     }
     IEnumerator GoTowards(Vector3[] direction)
     {
-        for(int i = 0; i != direction.Length; i++)
+        int way = 1;
+        for(int i = 0; i != direction.Length+1; i+=way)
         {
-        Vector3 initialPos = transform.position;
-            if (direction[i].y > 0)
+            
+            if (i == 0||waitsEveryTurn)
+            {
+                yield return new WaitForSeconds(repeatWait);
+            }
+            
+            Vector3 initialPos = transform.position;
+            if (direction[i] == null)
+            {
+                yield return null;
+            }
+            else if (direction[i].y > 0)
             {
                 if(direction[i].x > 0)
                 {
@@ -103,7 +116,15 @@ public class FollowTrack : MonoBehaviour
                     
                 }
             }
-        
+            if((i==direction.Length - 1||i+way==-1)&&repeats)
+            {
+                way=-way;
+                for (int j = 0; j < direction.Length; j++)
+                {
+                    direction[j].x = -direction[j].x;
+                    direction[j].y = -direction[j].y;
+                }
+            }
         }
     }
 

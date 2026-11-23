@@ -11,6 +11,7 @@ public class Human_Reaction : MonoBehaviour
     public float topbound = 0.5f, bottombound = -0.5f, leftbound = -0.5f, rightbound = 0.5f, speed = 0.5f;
     public bool alive=true;
     public float startNoticeDelay, shifterNoticeDelay, humanNoticeDelay, objectNoticeDelay;
+    public Vector3 playerPos;
     void Start()
     {
         cannoticeshifter = false;
@@ -21,7 +22,7 @@ public class Human_Reaction : MonoBehaviour
     }
     void Update()
     {
-        Vector3 playerPos = player.transform.position;
+        playerPos = player.transform.position;
         if(playerPos.x > gameObject.transform.position.x + -0.5 && playerPos.x < gameObject.transform.position.x + 0.5 && playerPos.y > gameObject.transform.position.y + -0.5 && playerPos.y < gameObject.transform.position.y + 0.5)
         {
             if (playerController.attack.triggered)
@@ -95,7 +96,7 @@ public class Human_Reaction : MonoBehaviour
             transform.Translate((transform.position-player.transform.position).normalized*Time.deltaTime*speed);
         }
         
-        if (alive&&playerPos.x > gameObject.transform.position.x + leftbound && playerPos.x < gameObject.transform.position.x + rightbound && playerPos.y > gameObject.transform.position.y + bottombound && playerPos.y < gameObject.transform.position.y + topbound)
+        if (!player.GetComponent<PlayerController>().safe&&alive&&playerPos.x > gameObject.transform.position.x + leftbound && playerPos.x < gameObject.transform.position.x + rightbound && playerPos.y > gameObject.transform.position.y + bottombound && playerPos.y < gameObject.transform.position.y + topbound)
         {
            suspectsShifter = true;
             if (playerController.shiftedTag == "Human")
@@ -105,7 +106,7 @@ public class Human_Reaction : MonoBehaviour
             }
             if (playerController.shiftedTag == "Object" && playerController.moveInput != new Vector2(0, 0))
             {
-                StartCoroutine(NoticingObject(objectNoticeDelay, playerPos));
+                StartCoroutine(NoticingObject(objectNoticeDelay));
             }
             if (playerController.shiftedTag == "Shifter")
             {
@@ -116,13 +117,18 @@ public class Human_Reaction : MonoBehaviour
         {
             suspectsShifter = false;
         }
+        if (player.GetComponent<PlayerController>().safe)
+        {
+            suspectsShifter = false;
+        }
         
         
     }
     public IEnumerator NoticingHuman(float seconds, Vector3 playerPos)
     {
         yield return new WaitForSeconds(seconds);
-        if (playerPos.x > gameObject.transform.position.x + leftbound && playerPos.x < gameObject.transform.position.x + rightbound && playerPos.y > gameObject.transform.position.y + bottombound && playerPos.y < gameObject.transform.position.y + topbound)
+        Vector3 currentPlayerPos = player.transform.position;
+        if (!player.GetComponent<PlayerController>().safe&&currentPlayerPos.x > gameObject.transform.position.x + leftbound && currentPlayerPos.x < gameObject.transform.position.x + rightbound && currentPlayerPos.y > gameObject.transform.position.y + bottombound && currentPlayerPos.y < gameObject.transform.position.y + topbound)
         {
             noticedShifter = true;
         }
@@ -143,10 +149,10 @@ public class Human_Reaction : MonoBehaviour
         }
         
     }
-    public IEnumerator NoticingObject(float seconds, Vector3 playerPos)
+    public IEnumerator NoticingObject(float seconds)
     {
         yield return new WaitForSeconds(seconds);
-        if(playerController.moveInput != new Vector2(0, 0)&&playerPos.x > gameObject.transform.position.x + leftbound && playerPos.x < gameObject.transform.position.x + rightbound && playerPos.y > gameObject.transform.position.y + bottombound && playerPos.y < gameObject.transform.position.y + topbound)
+        if(!player.GetComponent<PlayerController>().safe&&playerController.moveInput != new Vector2(0, 0)&&playerPos.x > gameObject.transform.position.x + leftbound && playerPos.x < gameObject.transform.position.x + rightbound && playerPos.y > gameObject.transform.position.y + bottombound && playerPos.y < gameObject.transform.position.y + topbound)
         {
             noticedShifter = true;
         }

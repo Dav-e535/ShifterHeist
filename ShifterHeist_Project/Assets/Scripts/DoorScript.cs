@@ -7,6 +7,7 @@ public class DoorScript : MonoBehaviour
     void Start()
     {
         sr = GetComponent<SpriteRenderer>();
+        sr.sprite = closedDoor;
     }
 
     // Update is called once per frame
@@ -28,6 +29,14 @@ public class DoorScript : MonoBehaviour
         {
             sr.sprite = closedDoor;
         }
+    }
+    public void OpenDoor()
+    {
+        sr.sprite = openDoor;
+    }
+    public void CloseDoor()
+    {
+        sr.sprite = closedDoor;
     }
 
 }

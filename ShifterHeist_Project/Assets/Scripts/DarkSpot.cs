@@ -5,7 +5,7 @@ public class DarkSpot : MonoBehaviour
 {
     public float fadeSpeed;
     private SpriteRenderer spriteRenderer;
-    public bool fadingin = false, fadingout = false;
+    public bool fadingin = false, fadingout = false, safeSpot = false;
     void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
