@@ -4,9 +4,11 @@ using UnityEngine;
 public class AgentReaction : MonoBehaviour
 {
     public Animator agentAnimator;
-    public bool noticedShifter = false, objectNoticePending = false, agentAlive;
+    public bool noticedShifter = false, objectNoticePending = false, agentAlive, targetHuman = false;
     public float topbound = 0.5f, bottombound = -0.5f, leftbound = -0.5f, rightbound = 0.5f;
     private GameObject player;
+    public GameObject humanReported;
+    public bool runtowardsShifter=false;
     private PlayerController playerController;
     public float shifterNoticeDelay, humanNoticeDelay, objectNoticeDelay;
     void Start()
@@ -62,6 +64,19 @@ public class AgentReaction : MonoBehaviour
             StopCoroutine(TimeUntilNoticed(humanNoticeDelay));
             StopCoroutine(TimeUntilNoticedObject(objectNoticeDelay));
         }
+        if (runtowardsShifter&&!GetComponent<Human_Reaction>().noticedShifter&&GetComponent<Human_Reaction>().suspectsShifter)
+        {
+            targetHuman = true;
+            
+        }
+        else if (runtowardsShifter)
+        {
+            GetComponent<PathFindPlayer>().target = player;
+        }
+        if(targetHuman == true)
+        {
+            GetComponent<PathFindPlayer>().target = humanReported;
+        }
         
         
         //}
@@ -112,5 +127,12 @@ public IEnumerator TimeUntilNoticedObject(float seconds)
             objectNoticePending = false;
         }
         }
-    
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("human"))
+        {
+            targetHuman = false;
+        }
+    }
+
 }

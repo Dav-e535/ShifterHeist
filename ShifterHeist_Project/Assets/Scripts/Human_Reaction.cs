@@ -1,4 +1,5 @@
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Human_Reaction : MonoBehaviour
@@ -7,6 +8,7 @@ public class Human_Reaction : MonoBehaviour
     public GameObject noticedIcon;
     public GameObject player;
     public PlayerController playerController;
+    public GameObject myAgent;
     public bool suspectsShifter = false, noticedShifter=false, stopchecking=false, cannoticeshifter = false;
     public float topbound = 0.5f, bottombound = -0.5f, leftbound = -0.5f, rightbound = 0.5f, speed = 0.5f;
     public bool alive=true;
@@ -94,6 +96,13 @@ public class Human_Reaction : MonoBehaviour
         if (noticedShifter&&alive)
         {
             transform.Translate((transform.position-player.transform.position).normalized*Time.deltaTime*speed);
+            if (myAgent != null)
+            {
+                myAgent.GetComponent<AgentReaction>().runtowardsShifter = true;
+                myAgent.GetComponent<AgentReaction>().humanReported = gameObject;
+            }
+            
+            
         }
         
         if (!player.GetComponent<PlayerController>().safe&&alive&&playerPos.x > gameObject.transform.position.x + leftbound && playerPos.x < gameObject.transform.position.x + rightbound && playerPos.y > gameObject.transform.position.y + bottombound && playerPos.y < gameObject.transform.position.y + topbound)
