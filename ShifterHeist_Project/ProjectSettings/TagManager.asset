@@ -14,6 +14,7 @@ TagManager:
   - Item
   - Door
   - DarkSpot
+  - Server
   layers:
   - Default
   - TransparentFX

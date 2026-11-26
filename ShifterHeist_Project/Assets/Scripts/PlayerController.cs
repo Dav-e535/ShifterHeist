@@ -20,7 +20,7 @@ public class PlayerController : MonoBehaviour
     public string shiftedTag = "Shifter";
     public float shiftNumber = 0;
     public bool alive = true, canUse = false, safe;
-    public bool canTurnBack = true;
+    public bool canTurnBack = true, canTurnOnServer = false;
     public Animator animator;
     public InputAction attack, restart, use;
     public float atkcooldown = 1f, ShiftCoolDown;
@@ -181,6 +181,11 @@ public class PlayerController : MonoBehaviour
             }
             
         }
+        if (collision.CompareTag("Server"))
+        {
+            canTurnOnServer = true;
+            collision.GetComponent<ServerScript>().canTurnOn = true;
+        }
 
     }
 
@@ -204,6 +209,11 @@ public class PlayerController : MonoBehaviour
         if (collision.CompareTag("Door"))
         {
             collision.gameObject.GetComponent<DoorScript>().CloseDoor();
+        }
+        if (collision.CompareTag("Server"))
+        {
+            canTurnOnServer = false;
+            collision.GetComponent<ServerScript>().canTurnOn = false;
         }
 
     }
