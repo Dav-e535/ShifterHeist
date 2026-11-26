@@ -16,7 +16,7 @@ public class ServerScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (canTurnOn&&player.canTurnOnServer&&player.use.triggered)
+        if (canTurnOn&&player.canTurnOnServer&&player.use.triggered&&!isOn)
         {
             isOn = true;
             gm.ServerActivated(gameObject);

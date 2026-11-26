@@ -27,8 +27,8 @@ public class PlayerController : MonoBehaviour
     private bool canEnterVent = false;
     public Vector3 secondVentPosition;
     private bool isVenting= false;
-    public Coroutine maxShiftCoroutine;
-    public Coroutine shiftCooldownCoroutine;
+    private Coroutine maxShiftCoroutine;
+    private Coroutine shiftCooldownCoroutine;
     void Start()
     {
         moveAction.Enable();

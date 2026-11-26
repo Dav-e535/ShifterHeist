@@ -3,11 +3,12 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     public bool keycardGet = false, serverPuzzleSolved = false;
-    public GameObject firstDoor;
+    public GameObject firstDoor, seconddoor, screen;
     public GameObject[] servers; 
     public int serverorder = 0;
     public int[] theOrder;
     public bool everythingCorrectServer;
+    public Sprite screenEmpty, screenLocked, screenUnlocked;
     void Start()
     {
         everythingCorrectServer = true;
@@ -20,6 +21,7 @@ public class GameManager : MonoBehaviour
         {
             firstDoor.GetComponent<BoxCollider2D>().isTrigger = true;
         }
+        
     }
     public void ActivateProgressPoint(GameObject gObject)
     {
@@ -30,9 +32,18 @@ public class GameManager : MonoBehaviour
     }
     public void ServerActivated(GameObject serv)
     {
+        serverorder++;
+        System.Array.Resize(ref servers, servers.Length + 1);
+        servers[serverorder - 1] = serv;
+        if (servers[serverorder - 1].GetComponent<ServerScript>().servernumber != theOrder[serverorder - 1])
+        {
+            everythingCorrectServer = false;
+        }
         if(serverorder == 6 && everythingCorrectServer)
         {
             serverPuzzleSolved = true;
+            seconddoor.GetComponent<BoxCollider2D>().isTrigger = true;
+            screen.GetComponent<SpriteRenderer>().sprite = screenUnlocked;
         }
         else if(serverorder == 6)
         {
@@ -43,17 +54,6 @@ public class GameManager : MonoBehaviour
             System.Array.Resize(ref servers, 0);
             serverorder = 0;
             everythingCorrectServer = true;
-        }
-        else
-        {
-            System.Array.Resize(ref servers, servers.Length + 1);
-            serverorder++;
-            servers[serverorder - 1] = serv;
-            if (servers[serverorder - 1].GetComponent<ServerScript>().servernumber != theOrder[serverorder - 1])
-            {
-                everythingCorrectServer = false;
-            }
-            
         }
     }
 }
