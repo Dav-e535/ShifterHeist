@@ -3,7 +3,7 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     public bool keycardGet = false, serverPuzzleSolved = false;
-    public GameObject firstDoor, seconddoor, screen;
+    public GameObject firstDoor, seconddoor, managerdoor, screen, player;
     public GameObject[] servers; 
     public int serverorder = 0;
     public int[] theOrder;
@@ -12,6 +12,7 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         everythingCorrectServer = true;
+        player = GameObject.Find("Player");
     }
 
     // Update is called once per frame
@@ -21,7 +22,10 @@ public class GameManager : MonoBehaviour
         {
             firstDoor.GetComponent<BoxCollider2D>().isTrigger = true;
         }
-        
+        if (player.GetComponent<PlayerController>().isAgentHuman)
+        {
+            managerdoor.GetComponent<BoxCollider2D>().isTrigger = true;
+        }
     }
     public void ActivateProgressPoint(GameObject gObject)
     {

@@ -3,10 +3,12 @@ using UnityEngine;
 public class ShiftOption : MonoBehaviour
 {
     public PlayerController playerController;
+    public Sprite originalSprite;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         playerController = GameObject.Find("Player").GetComponent<PlayerController>();
+        originalSprite = GetComponent<SpriteRenderer>().sprite;
     }
 
     // Update is called once per frame

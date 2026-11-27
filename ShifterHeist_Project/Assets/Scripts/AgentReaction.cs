@@ -11,6 +11,7 @@ public class AgentReaction : MonoBehaviour
     public bool runtowardsShifter=false;
     private PlayerController playerController;
     public float shifterNoticeDelay, humanNoticeDelay, objectNoticeDelay;
+    private Coroutine noticingShifter, noticingObject, noticingHuman;
     void Start()
     {
         topbound = GetComponent<Human_Reaction>().topbound;
@@ -26,6 +27,7 @@ public class AgentReaction : MonoBehaviour
         agentAnimator.SetBool("noticed", false);
         playerController = player.GetComponent<PlayerController>();
         objectNoticePending = false;
+        
     }
 
     // Update is called once per frame
@@ -42,27 +44,53 @@ public class AgentReaction : MonoBehaviour
         else
         {
             noticedShifter = false;
+            if (noticingShifter != null)
+            {
+                StopCoroutine(noticingShifter);
+                noticingShifter = null;
+            }
+            if (noticingHuman != null)
+            {
+                StopCoroutine(noticingHuman);
+                noticingHuman = null;
+            }
+            if (noticingObject != null)
+            {
+                StopCoroutine(noticingObject);
+                noticingObject = null;
+            }
         }
-        if (!player.GetComponent<PlayerController>().safe&&noticedShifter && player.GetComponent<PlayerController>().alive && agentAnimator.GetBool("noticed") == false && playerController.shiftedTag == "Shifter")
+        if (noticingShifter==null&&!player.GetComponent<PlayerController>().safe&&noticedShifter && player.GetComponent<PlayerController>().alive && agentAnimator.GetBool("noticed") == false && playerController.shiftedTag == "Shifter")
         {
-            StartCoroutine(TimeUntilNoticed(shifterNoticeDelay));
+            noticingShifter =StartCoroutine(TimeUntilNoticedS(shifterNoticeDelay));
         }
-        if (!player.GetComponent<PlayerController>().safe&&!objectNoticePending &&noticedShifter && player.GetComponent<PlayerController>().alive && agentAnimator.GetBool("noticed") == false && playerController.shiftedTag == "Object"&&playerController.moveInput!=new Vector2(0,0))
+        if (noticingObject==null&&!player.GetComponent<PlayerController>().safe&&!objectNoticePending &&noticedShifter && player.GetComponent<PlayerController>().alive && agentAnimator.GetBool("noticed") == false && playerController.shiftedTag == "Object"&&playerController.moveInput!=new Vector2(0,0))
         {
             
-            StartCoroutine(TimeUntilNoticedObject(objectNoticeDelay));
+            noticingObject = StartCoroutine(TimeUntilNoticedObject(objectNoticeDelay));
         }
-        if(!player.GetComponent<PlayerController>().safe&&noticedShifter&&player.GetComponent<PlayerController>().alive&&agentAnimator.GetBool("noticed")==false&&playerController.shiftedTag=="Human")
+        if(noticingHuman==null&&!player.GetComponent<PlayerController>().safe&&noticedShifter&&player.GetComponent<PlayerController>().alive&&agentAnimator.GetBool("noticed")==false&&playerController.shiftedTag=="Human")
         {
-            StartCoroutine(TimeUntilNoticed(humanNoticeDelay));
-            
-            
+            noticingHuman = StartCoroutine(TimeUntilNoticedH(humanNoticeDelay));
         }
-        if(player.GetComponent<PlayerController>().alive != true)
+        
+        if(player.GetComponent<PlayerController>().alive != true||GetComponent<Human_Reaction>().alive!=true)
         {
-            StopCoroutine(TimeUntilNoticed(shifterNoticeDelay));
-            StopCoroutine(TimeUntilNoticed(humanNoticeDelay));
-            StopCoroutine(TimeUntilNoticedObject(objectNoticeDelay));
+            if (noticingShifter != null)
+            {
+                StopCoroutine(noticingShifter);
+                noticingShifter = null;
+            }
+            if (noticingHuman != null)
+            {
+                StopCoroutine(noticingHuman);
+                noticingHuman = null;
+            }
+            if (noticingObject != null)
+            {
+                StopCoroutine(noticingObject);
+                noticingObject = null;
+            }
         }
         if (runtowardsShifter&&!GetComponent<Human_Reaction>().noticedShifter&&GetComponent<Human_Reaction>().suspectsShifter)
         {
@@ -82,7 +110,7 @@ public class AgentReaction : MonoBehaviour
         //}
         
     }
-    public IEnumerator TimeUntilNoticed(float seconds)
+    public IEnumerator TimeUntilNoticedS(float seconds)
         {
             yield return new WaitForSeconds(seconds);
             Vector3 playerPos = player.transform.position;
@@ -96,7 +124,23 @@ public class AgentReaction : MonoBehaviour
             {
                 agentAnimator.SetBool("noticed", false);
             }
-            
+            noticingShifter = null;
+        }
+    public IEnumerator TimeUntilNoticedH(float seconds)
+        {
+            yield return new WaitForSeconds(seconds);
+            Vector3 playerPos = player.transform.position;
+            if (playerPos.x > gameObject.transform.position.x + leftbound && playerPos.x < gameObject.transform.position.x + rightbound && playerPos.y > gameObject.transform.position.y + bottombound && playerPos.y < gameObject.transform.position.y + topbound)
+            {
+                agentAnimator.SetBool("noticed", true);
+                
+                StartCoroutine(WhileNoticed(3f));
+            }
+            else
+            {
+                agentAnimator.SetBool("noticed", false);
+            }
+            noticingHuman = null;
         }
 public IEnumerator TimeUntilNoticedObject(float seconds)
         {
@@ -114,7 +158,7 @@ public IEnumerator TimeUntilNoticedObject(float seconds)
                 agentAnimator.SetBool("noticed", false);
                 objectNoticePending = false;
             }
-            
+            noticingObject = null;
         }
         public IEnumerator WhileNoticed(float seconds)
         {
@@ -129,7 +173,7 @@ public IEnumerator TimeUntilNoticedObject(float seconds)
         }
     void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("human"))
+        if (collision.gameObject.CompareTag("Human"))
         {
             targetHuman = false;
         }

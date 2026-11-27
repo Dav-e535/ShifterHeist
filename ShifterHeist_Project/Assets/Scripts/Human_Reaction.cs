@@ -14,13 +14,16 @@ public class Human_Reaction : MonoBehaviour
     public bool alive=true;
     public float startNoticeDelay, shifterNoticeDelay, humanNoticeDelay, objectNoticeDelay;
     public Vector3 playerPos;
+    private Coroutine noticingHuman;
+    private Coroutine noticingObject;
+    private Coroutine canNoticeCoroutine;
     void Start()
     {
         cannoticeshifter = false;
         alive = true;
         player = GameObject.Find("Player");
         playerController = player.GetComponent<PlayerController>();
-        StartCoroutine(canNoticeWait());
+        canNoticeCoroutine = StartCoroutine(canNoticeWait());
     }
     void Update()
     {
@@ -108,14 +111,14 @@ public class Human_Reaction : MonoBehaviour
         if (!player.GetComponent<PlayerController>().safe&&alive&&playerPos.x > gameObject.transform.position.x + leftbound && playerPos.x < gameObject.transform.position.x + rightbound && playerPos.y > gameObject.transform.position.y + bottombound && playerPos.y < gameObject.transform.position.y + topbound)
         {
            suspectsShifter = true;
-            if (playerController.shiftedTag == "Human")
+            if (playerController.shiftedTag == "Human"&&noticingHuman == null)
             {
                 
-                StartCoroutine(NoticingHuman(humanNoticeDelay,playerPos));
+                noticingHuman = StartCoroutine(NoticingHuman(humanNoticeDelay,playerPos));
             }
-            if (playerController.shiftedTag == "Object" && playerController.moveInput != new Vector2(0, 0))
+            if (playerController.shiftedTag == "Object" && playerController.moveInput != new Vector2(0, 0)&&noticingObject == null)
             {
-                StartCoroutine(NoticingObject(objectNoticeDelay));
+                noticingObject = StartCoroutine(NoticingObject(objectNoticeDelay));
             }
             if (playerController.shiftedTag == "Shifter")
             {
@@ -125,6 +128,16 @@ public class Human_Reaction : MonoBehaviour
         else if(alive)
         {
             suspectsShifter = false;
+            if (noticingHuman != null)
+            {
+                StopCoroutine(noticingHuman);
+                noticingHuman = null;
+            }
+            if (noticingObject != null)
+            {
+                StopCoroutine(noticingObject);
+                noticingObject = null;
+            }
         }
         if (player.GetComponent<PlayerController>().safe)
         {
@@ -156,6 +169,7 @@ public class Human_Reaction : MonoBehaviour
             }
             suspectsShifter = false;
         }
+        noticingHuman = null;
         
     }
     public IEnumerator NoticingObject(float seconds)
@@ -180,10 +194,12 @@ public class Human_Reaction : MonoBehaviour
             }
             suspectsShifter = false;
         }
+        noticingObject = null;
     }
     IEnumerator canNoticeWait()
     {
         yield return new WaitForSeconds(startNoticeDelay);
         cannoticeshifter = true;
+        canNoticeCoroutine = null;
     }
 }

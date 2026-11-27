@@ -20,7 +20,7 @@ public class PlayerController : MonoBehaviour
     public string shiftedTag = "Shifter";
     public float shiftNumber = 0;
     public bool alive = true, canUse = false, safe;
-    public bool canTurnBack = true, canTurnOnServer = false;
+    public bool canTurnBack = true, canTurnOnServer = false, isAgentHuman;
     public Animator animator;
     public InputAction attack, restart, use;
     public float atkcooldown = 1f, ShiftCoolDown;
@@ -135,16 +135,18 @@ public class PlayerController : MonoBehaviour
     }
     public void ShapeShift(int index)
     {
-        if(index != 0)
+        if(shiftList[index]!=null||index<shiftList.Length){
+        if(index != 0&&shiftNumber==0)
         {
             animator.enabled = false;
             if (maxShiftCoroutine != null)
             {
                 StopCoroutine(maxShiftCoroutine);
+                maxShiftCoroutine = null;
             }
             maxShiftCoroutine = StartCoroutine(MaxShiftTime(30f));
         }
-        else
+        else if (index == 0)
         {
             animator.enabled = true;
             if (maxShiftCoroutine != null)
@@ -153,9 +155,11 @@ public class PlayerController : MonoBehaviour
                 maxShiftCoroutine = null;
             }
         }
-        playerSprite.sprite = shiftList[index].GetComponent<SpriteRenderer>().sprite;
+        //TO DO: CHECK IF THIS ACTUALLY WORKS WITHOUT USING THE OTHER CONDITIONS
+        playerSprite.sprite = shiftList[index].GetComponent<ShiftOption>().originalSprite;
         shiftedTag = shiftList[index].tag;
         shiftNumber = index;
+        }
     }
     public void OnTriggerEnter2D(Collider2D collision)
     {
